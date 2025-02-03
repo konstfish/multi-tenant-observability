@@ -1,5 +1,4 @@
 resources:
-  - rbac.yaml
   - prometheus.yaml
-  - servicemonitor.yaml
+  - extra
   - thanos
