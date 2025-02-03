@@ -1,0 +1,40 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+spec:
+  serviceAccountName: prometheus
+  # select everything
+  serviceMonitorNamespaceSelector: {}
+  serviceMonitorSelector: {}
+  podMonitorSelector: {}
+  # adjust to your liking
+  replicas: 2
+  retention: 7d
+  # patch in a storage class name
+  storage:
+    volumeClaimTemplate:
+      spec:
+        # storageClassName: <storage-class>
+        resources:
+          requests:
+            storage: 20Gi
+  # either patch this out or create the secret
+  thanos:
+    image: quay.io/thanos/thanos:v0.36.1
+    objectStorageConfig:
+      key: thanos.yaml
+      name: thanos-objstore-secret
+  # realistic-ish limits
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 5Gi
+    requests:
+      cpu: 250m
+      memory: 500Mi
+  securityContext:
+    runAsUser: 65534
+    fsGroup: 65534
+  #externalLabels:
+  #  cluster: <name>

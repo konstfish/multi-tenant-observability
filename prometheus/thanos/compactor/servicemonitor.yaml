@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: thanos-compactor
+  labels:
+    app: thanos-compactor
+spec:
+  selector:
+    matchLabels:
+      app: thanos-compactor
+  endpoints:
+  - port: http
+    interval: 30s

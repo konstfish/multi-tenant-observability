@@ -1,0 +1,35 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics
+  labels:
+    app: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      app: grafana
+  valuesFrom:
+    - targetPath: secureJsonData.httpHeaderValue1
+      valueFrom:
+        secretKeyRef:
+          key: token
+          name: grafana-ds-sa-token
+  datasource:
+    name: metrics
+    type: prometheus
+    uid: prometheus1
+    access: proxy
+    url: "https://thanos-querier-frontend.monitoring.svc:9090/"
+    isDefault: true
+    editable: false
+    jsonData:
+      customQueryParameters: "namespace=<tenant-namespace>"
+      httpHeaderName1: Authorization
+      # Important, as kube-rbac-proxy will assume `create` as the default verb on POST requests
+      httpMethod: GET
+      manageAlerts: false
+      queryTimeout: 5m
+      timeInterval: 30s
+      tlsSkipVerify: true
+    secureJsonData:
+      httpHeaderValue1: "Bearer ${token}"

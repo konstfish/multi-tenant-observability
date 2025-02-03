@@ -1,0 +1,5 @@
+resources:
+  - sidecar
+  - querier
+  - store-gateway
+  - compactor

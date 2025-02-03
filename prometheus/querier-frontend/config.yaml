@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-rbac-proxy
+data:
+  config.yaml: |+
+    authorization:
+      rewrites:
+        byQueryParameter:
+          name: "namespace"
+      resourceAttributes:
+        apiVersion: v1
+        resource: namespace
+        subresource: metrics
+        namespace: "{{ .Value }}"

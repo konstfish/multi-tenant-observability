@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-store-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-store-gateway
+  template:
+    metadata:
+      labels:
+        app: thanos-store-gateway
+    spec:
+      containers:
+      - name: thanos-store-gateway
+        image: quay.io/thanos/thanos:v0.36.1
+        args:
+          - store
+          - --data-dir=/var/thanos/store
+          - --objstore.config=$(OBJSTORE_CONFIG)
+          - --http-address=0.0.0.0:10902
+          - --grpc-address=0.0.0.0:10901
+        env:
+        - name: OBJSTORE_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: thanos-objstore-secret
+              key: thanos.yaml
+        volumeMounts:
+        - name: data
+          mountPath: /var/thanos/store
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 100m
+          limits:
+            memory: 2Gi
+            cpu: 500m
+        ports:
+        - containerPort: 10902
+        - containerPort: 10901
+      volumes:
+      - name: data
+        emptyDir: {}
+

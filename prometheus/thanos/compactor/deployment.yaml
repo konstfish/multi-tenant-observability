@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-compactor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-compactor
+  template:
+    metadata:
+      labels:
+        app: thanos-compactor
+    spec:
+      containers:
+      - name: thanos-compactor
+        image: quay.io/thanos/thanos:v0.36.1
+        args:
+          - compact
+          - --data-dir=/var/thanos/compact
+          - --objstore.config=$(OBJSTORE_CONFIG)
+          - --retention.resolution-raw=30d
+          - --retention.resolution-5m=60d
+          - --retention.resolution-1h=90d
+          - --delete-delay=15m
+          - --wait
+          - --wait-interval=3m
+        env:
+        - name: OBJSTORE_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: thanos-objstore-secret
+              key: thanos.yaml
+        volumeMounts:
+        - name: data
+          mountPath: /var/thanos/compact
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 100m
+          limits:
+            memory: 2Gi
+            cpu: 500m
+        ports:
+        - containerPort: 10902
+        - containerPort: 10901
+      volumes:
+      - name: data
+        emptyDir: {}
