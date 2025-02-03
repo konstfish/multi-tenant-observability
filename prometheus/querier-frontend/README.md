@@ -15,17 +15,17 @@ flowchart LR
     end
 
     tnt[Tenant] -->|1 - Query Metrics| grafana
-    grafana -->|2 - Request including SA JWT & namespace=tenant Query Parameter| krp(kube-rbac-proxy)
+    grafana -->|2 - SA JWT & namespace=tenant| krp(kube-rbac-proxy)
 
     subgraph Monitoring Namespace
         subgraph Thanos Query Frontend
             krp(kube-rbac-proxy)
-            krp -->|3 - Validate Service Account Permissions| sar
+            krp -->|3 - Validate SA Perms| sar
             sar -->|4 - Confirm Access| krp
             krp -->|5 - Pass Request| plp(prom-label-proxy)
         end
 
-        plp -->|7 If 'namespace' label is set, pass request| prom
+        plp -->|7 Enforce 'namespace' label| prom
 
         prom(Prometheus)
     end

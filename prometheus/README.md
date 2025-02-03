@@ -16,7 +16,7 @@ flowchart LR
             tensm(ServiceMonitor*)
         end
 
-        tengraf --> querfront
+        tengraf --> krp
 
         subgraph Monitoring
             subgraph promi[Prometheus Instance]
@@ -27,7 +27,13 @@ flowchart LR
             thancom(Thanos Compactor)
             thansto(Thanos Storage Gateway)
             thanquer(Thanos Querier) --> than
-            querfront(Querier Frontend) --> thanquer
+
+            subgraph querfront[Querier Frontend]
+                krp(kube-rbac-proxy)
+                krp --> plp(prom-label-proxy)
+            end
+
+            plp --> thanquer
         end
 
         promop -..-> promi
