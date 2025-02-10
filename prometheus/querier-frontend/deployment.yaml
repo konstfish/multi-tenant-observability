@@ -36,7 +36,7 @@ spec:
           limits:
             memory: 1Gi
             cpu: 500m
-      - name: prom-label-enforcer
+      - name: prom-label-proxy
         image: quay.io/prometheuscommunity/prom-label-proxy:v0.11.0
         imagePullPolicy: Always
         args:

@@ -18,7 +18,7 @@ flowchart LR
 
         tengraf --> krp
 
-        subgraph Monitoring
+        subgraph Monitoring Namespace
             subgraph promi[Prometheus Instance]
                 prom(Prometheus)
                 than(Thanos Sidecar) --> prom
@@ -27,6 +27,7 @@ flowchart LR
             thancom(Thanos Compactor)
             thansto(Thanos Storage Gateway)
             thanquer(Thanos Querier) --> than
+            thanquer --> thansto
 
             subgraph querfront[Querier Frontend]
                 krp(kube-rbac-proxy)
@@ -46,7 +47,6 @@ flowchart LR
     than -.-> s3
     thancom -.-> s3
     thansto -.-> s3
-    thanquer <-.-> s3
 
     tensm <-.-> prom
 ```
