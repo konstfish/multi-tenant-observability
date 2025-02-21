@@ -10,6 +10,6 @@ data:
           name: "namespace"
       resourceAttributes:
         apiVersion: v1
-        resource: namespace
+        resource: pods
         subresource: metrics
         namespace: "{{ .Value }}"

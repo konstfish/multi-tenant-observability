@@ -2,7 +2,7 @@
 
 ## [role.yaml](role.yaml) 
 
-Create a Role with view rights on `namespace/metrics` as configured for the `kube-rbac-proxy` in [config.yaml](../querier-frontend/config.yaml).
+Create a Role (or ClusterRole) with view rights on `pods/metrics` as configured for the `kube-rbac-proxy` in [config.yaml](../querier-frontend/config.yaml).
 
 ## [sa.yaml](sa.yaml) & [token.yaml](token.yaml)
 

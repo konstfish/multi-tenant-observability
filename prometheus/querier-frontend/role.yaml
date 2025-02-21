@@ -1,5 +1,6 @@
+# note this is not required, you can also have tenants make their own roles
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   name: namespace-metrics-viewer
 rules:

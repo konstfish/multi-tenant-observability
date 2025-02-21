@@ -35,7 +35,7 @@ flowchart LR
 
 #### [config.yaml](config.yaml)
 
-Contains config for `kube-rbac-proxy`. Extracts the value from the `namespace` query parameter & creates a `SubjectAccessReview` to confirm the requesting account (which is derivated from the attached Authorization header, usually a Service Accounts JWT) has permissions on the `namespace/metrics` resource. The verb corresponds to the [HTTP Method used for the call]( https://github.com/brancz/kube-rbac-proxy/blob/master/pkg/proxy/proxy.go#L48-L60.). This setup is built around all calls to Prometheus being strictly `GET` to limit the amount of permissions needed.
+Contains config for `kube-rbac-proxy`. Extracts the value from the `namespace` query parameter & creates a `SubjectAccessReview` to confirm the requesting account (which is derivated from the attached Authorization header, usually a Service Accounts JWT) has permissions on the `pods/metrics` subresource. The verb corresponds to the [HTTP Method used for the call]( https://github.com/brancz/kube-rbac-proxy/blob/master/pkg/proxy/proxy.go#L48-L60.). This setup is built around all calls to Prometheus being strictly `GET` to limit the amount of permissions needed.
 
 #### [deployment.yaml](deployment.yaml)
 
@@ -44,3 +44,7 @@ Deployment which creates a Pod including containers for both `kube-rbac-proxy` &
 #### [serviceaccount.yaml](serviceaccount.yaml)
 
 `kube-rbac-proxy` requires the `system:auth-delegator` `ClusterRole` to create `SubjectAccessReviews`.
+
+#### [role.yaml](role.yaml)
+
+Creates a `ClusterRole` "namespace-metrics-viewer" which grants get on the `pods/metrics` subresource. Tenants will require these rights to view metrics in their namespace.
