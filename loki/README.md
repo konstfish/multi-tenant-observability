@@ -43,7 +43,7 @@ namespace: monitoring
 
 resources:
   # you should lock the ref here to a specific tag or commit 
-  # (or copy out the manifests to maintain locally) xxx
+  # (or copy out the manifests to maintain locally)
   - github.com/konstfish/multi-tenant-observability/loki?ref=main
   # S3 Object Storage Credential Secret
   - loki-objstore-secret.yaml
