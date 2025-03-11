@@ -1,0 +1,66 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: loki
+  namespace: monitoring
+spec:
+  chart: loki
+  repo: https://grafana.github.io/helm-charts
+  targetNamespace: monitoring
+  version: 6.20.0
+  valuesContent: |-
+    # adjust at will, this could be any loki deployment as long as multi-tenancy is enabled
+    deploymentMode: SimpleScalable
+    tableManager:
+      retention_deletes_enabled: "true"
+      retention_period: 720h
+    loki:
+      # multi-tenancy + multi tenant queries
+      auth_enabled: true
+      querier:
+        multi_tenant_queries_enabled: true
+      # s3 settings, taken from the loki-objstore-secret
+      storage:
+        bucketNames:
+          chunks: ${bucket}
+          ruler: ${bucket}
+          admin: ${bucket}
+        type: s3
+        s3:
+          endpoint: ${endpoint}
+          secretAccessKey: "${secretAccessKey}"
+          accessKeyId: "${accessKeyId}"
+      schemaConfig:
+        configs:
+          - from: 2024-04-01
+            object_store: s3
+            store: tsdb
+            schema: v13
+            index:
+              prefix: index_
+              period: 24h
+    # https://github.com/grafana/loki/issues/12218 - add objstore secret as env variables for S3
+    backend:
+      # make sure to patch in a storage class name
+      persistence:
+        storageClass: <storage-class>
+      extraArgs:
+        - -config.expand-env=true
+      extraEnvFrom: 
+        - secretRef:
+            name: loki-objstore-secret
+    read:
+      extraArgs:
+        - -config.expand-env=true
+      extraEnvFrom: 
+        - secretRef:
+            name: loki-objstore-secret
+    write:
+      extraArgs:
+        - -config.expand-env=true
+      extraEnvFrom: 
+        - secretRef:
+            name: loki-objstore-secret
+      # make sure to patch in a storage class name
+      persistence: 
+        storageClass: <storage-class>

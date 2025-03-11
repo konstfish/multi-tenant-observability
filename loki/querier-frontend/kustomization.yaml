@@ -1,0 +1,6 @@
+resources:
+  - config.yaml
+  - deployment.yaml
+  - service.yaml
+  - serviceaccount.yaml
+  - role.yaml

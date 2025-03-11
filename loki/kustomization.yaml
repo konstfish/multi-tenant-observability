@@ -1,0 +1,4 @@
+resources:
+  - loki.yaml
+  - alloy.yaml
+  - querier-frontend

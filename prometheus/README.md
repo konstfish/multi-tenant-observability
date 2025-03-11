@@ -1,6 +1,6 @@
 # Prometheus
 
-See the [blog post](xxx link here) for a detailed rundown on how to deploy this setup. These manifests will produce a Prometheus instance, Thanos components & a querier frontend which provides access to tenants, segregated by their namespaces. 
+See the [blog post](https://konst.fish/blog/Multi-Tenant-Prometheus-on-Kubernetes) for a detailed rundown on how to deploy this setup. These manifests will produce a Prometheus instance, Thanos components & a querier frontend which provides isolated access for tenants, split by their namespaces. 
 
 ## Structure
 
